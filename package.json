@@ -4,7 +4,7 @@
   "description": "Bedrock mongodb module",
   "main": "./lib/database",
   "scripts": {
-    "test": "node test.js"
+    "test": "node bedrock/test.js test"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-mongodb",
   "dependencies": {
     "async": "^1.4.2",
+    "lodash": "^4.11.1",
     "mongodb": "~2.0.15",
     "prompt": "~0.2.14"
   },
