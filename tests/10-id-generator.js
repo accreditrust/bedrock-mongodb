@@ -106,53 +106,28 @@ describe('generator', function() {
     ], done);
   });
 
-  it('fails the second time you run the test', function(done) {
-    var NUMBER_OF_GENERATORS = 500;
-    var NAMESPACE = 'mynamespace';
-    async.series([
-      function(callback) {
-        async.auto({
-          createGenerators: function(callback) {
-            async.times(NUMBER_OF_GENERATORS, function(n, callback) {
-              database.getDistributedIdGenerator(NAMESPACE, callback);
-            }, callback);
-          },
-          generateIds: ['createGenerators', function(callback, results) {
-            async.times(NUMBER_OF_GENERATORS, function(n, callback) {
-              results.createGenerators[n].generateId(callback);
-            }, function(err, results) {
-              should.not.exist(err);
-              should.exist(results);
-              results.should.be.an('array');
-              results.should.have.length(NUMBER_OF_GENERATORS);
-              _.uniq(results).should.have.length(NUMBER_OF_GENERATORS);
-              callback();
-            });
-          }]
+  it('fails the second time you run the test suite', function(done) {
+    var NUMBER_OF_GENERATORS = 2;
+    var NAMESPACE = 'mynamespace5';
+    async.auto({
+      createGenerators: function(callback) {
+        async.times(NUMBER_OF_GENERATORS, function(n, callback) {
+          database.getDistributedIdGenerator(NAMESPACE, callback);
         }, callback);
       },
-      function(callback) {
-        async.auto({
-          createGenerators: function(callback) {
-            async.times(NUMBER_OF_GENERATORS, function(n, callback) {
-              database.getDistributedIdGenerator(NAMESPACE, callback);
-            }, callback);
-          },
-          generateIds: ['createGenerators', function(callback, results) {
-            async.times(NUMBER_OF_GENERATORS, function(n, callback) {
-              results.createGenerators[n].generateId(callback);
-            }, function(err, results) {
-              should.not.exist(err);
-              should.exist(results);
-              results.should.be.an('array');
-              results.should.have.length(NUMBER_OF_GENERATORS);
-              _.uniq(results).should.have.length(NUMBER_OF_GENERATORS);
-              callback();
-            });
-          }]
-        }, done);
-      }
-    ], done);
+      generateIds: ['createGenerators', function(callback, results) {
+        async.times(NUMBER_OF_GENERATORS, function(n, callback) {
+          results.createGenerators[n].generateId(callback);
+        }, function(err, results) {
+          should.not.exist(err);
+          should.exist(results);
+          results.should.be.an('array');
+          results.should.have.length(NUMBER_OF_GENERATORS);
+          _.uniq(results).should.have.length(NUMBER_OF_GENERATORS);
+          callback();
+        });
+      }]
+    }, done);
   });
 
 }); // end generator
